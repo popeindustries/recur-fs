@@ -12,7 +12,7 @@ npm install buddy-fs
 ```javascript
 var fsutils = require('buddy-fs');
 
-fsutils.indir(/some/directory', '/some/directory/file.js');
+fsutils.indir('/some/directory', '/some/directory/file.js');
 // Gather all files ending in '.js'
 fsutils.readdir('/some/directory', /\.js$/, null, function(err, files, directories) {
   // Do something with 'files'
