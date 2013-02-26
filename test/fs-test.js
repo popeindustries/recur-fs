@@ -10,7 +10,7 @@ var path = require('path')
 	, rm = fsutils.rm
 	, cp = fsutils.cp;
 
-describe('buddy-fs', function() {
+describe('recur-fs', function() {
 	before(function() {
 		process.chdir(path.resolve(__dirname, 'fixtures'))
 	});
