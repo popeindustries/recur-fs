@@ -1,12 +1,12 @@
 {
 	"name": "recur-fs",
 	"description": "A collection of recursive filesystem utilities.",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"author": "popeindustries <alex@pope-industries.com>",
 	"keywords": ["fs"],
 	"dependencies": {
 		"rimraf": "2.1.4",
-		"mkdirp": "0.3.4"
+		"mkdirp": "0.3.5"
 	},
 	"devDependencies": {
 		"should": "*",
