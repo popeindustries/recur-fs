@@ -56,29 +56,28 @@ var readdir = exports.readdir = function(dir, include, ignore, fn) {
 				_outstanding--;
 				if (err) return fn(err);
 				files.forEach(function(file) {
-					// Skip ignored files
-					if (include.test(path.basename(file)) && !ignore.test(path.basename(file))) {
-						var filepath = path.resolve(dir, file);
-						_outstanding++;
-						return fs.stat(filepath, function(err, stats) {
-							_outstanding--;
-							if (err) {
-								// Exit if proper error, otherwise skip
-								if (err.code === 'ENOENT') return;
-								else return fn(err);
+					var filepath = path.resolve(dir, file);
+					_outstanding++;
+					return fs.stat(filepath, function(err, stats) {
+						_outstanding--;
+						if (err) {
+							// Exit if proper error, otherwise skip
+							if (err.code === 'ENOENT') return;
+							else return fn(err);
+						} else {
+							// Recurse child directory
+							if (stats.isDirectory()) {
+								return _readdir(filepath);
 							} else {
-								// Recurse child directory
-								if (stats.isDirectory()) {
-									return _readdir(filepath);
-								} else {
-									// Store
+								// Store if not ignored
+								if (include.test(path.basename(filepath)) && !ignore.test(path.basename(filepath))) {
 									_files.push(filepath);
-									// Return if no outstanding
-									if (!_outstanding) return fn(null, _files, _directories);
 								}
+								// Return if no outstanding
+								if (!_outstanding) return fn(null, _files, _directories);
 							}
-						});
-					}
+						}
+					});
 				});
 				// Return if no outstanding
 				if (!_outstanding) return fn(null, _files, _directories);
