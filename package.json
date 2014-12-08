@@ -1,7 +1,7 @@
 {
 	"name": "recur-fs",
 	"description": "A collection of recursive filesystem utilities.",
-	"version": "0.1.5",
+	"version": "1.0.0",
 	"author": "popeindustries <alex@pope-industries.com>",
 	"keywords": ["fs"],
 	"dependencies": {
