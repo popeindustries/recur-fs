@@ -355,8 +355,10 @@ var cpSync = exports.cpSync = function (source, destination, force) {
 					_first = false;
 				}
 				// Write file only if it doesn't already exist
-				if (!force && existsSync(filepath)) return _filepath;
-				rmSync(filepath);
+				if (existsSync(filepath)) {
+					if (!force) return _filepath;
+					rmSync(filepath);
+				}
 				fs.writeFileSync(filepath, fs.readFileSync(source));
 
 			// Directory
