@@ -5,15 +5,15 @@ var path = require('path')
 	, fsutils = require('..')
 	, indir = fsutils.indir
 	, readdir = fsutils.readdir
-	, readdirSync = fsutils.readdirSync
+	, readdirSync = readdir.sync
 	, mkdir = fsutils.mkdir
-	, mkdirSync = fsutils.mkdirSync
+	, mkdirSync = mkdir.sync
 	, mv = fsutils.mv
-	, mvSync = fsutils.mvSync
+	, mvSync = mv.sync
 	, rm = fsutils.rm
-	, rmSync = fsutils.rmSync
+	, rmSync = rm.sync
 	, cp = fsutils.cp
-	, cpSync = fsutils.cpSync;
+	, cpSync = cp.sync;
 
 describe('recur-fs', function () {
 	before(function () {
