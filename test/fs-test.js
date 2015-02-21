@@ -408,7 +408,7 @@ describe('recur-fs', function () {
 					if (~resource.indexOf('.js')) visits++;
 					next(false);
 				}, function (err) {
-					visits.should.equal(2);
+					visits.should.equal(1);
 					done();
 				});
 			});
