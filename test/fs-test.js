@@ -9,7 +9,8 @@ var path = require('path')
 	, mv = fsutils.mv
 	, rm = fsutils.rm
 	, cp = fsutils.cp
-	, walk = fsutils.walk;
+	, walk = fsutils.walk
+	, hunt = fsutils.hunt;
 
 describe('recur-fs', function () {
 	before(function () {
@@ -420,6 +421,56 @@ describe('recur-fs', function () {
 					if (resource.indexOf(process.cwd()) == 0 && ~resource.indexOf('.js')) visits++;
 				});
 				visits.should.equal(4);
+			});
+		});
+	});
+
+	describe('hunt', function () {
+		describe('async', function () {
+			it('should return all files matched with a matcher function', function (done) {
+				hunt(path.resolve('readdir-nested/src/package'), function (resource, next) {
+					next(~resource.indexOf('ClassCamelCase.js'));
+				}, null, function (err, matches) {
+					matches.should.have.length(1);
+					done();
+				});
+			});
+			it('should return all files matched with a matcher glob string', function (done) {
+				hunt(path.resolve('readdir-nested/src/package'), 'Class*.js', null, function (err, matches) {
+					matches.should.have.length(2);
+					done();
+				});
+			});
+			it('should return the first file matched when options.stopOnFirst is true', function (done) {
+				hunt(path.resolve('readdir-nested/src/package'), 'Class*.js', { stopOnFirst: true }, function (err, matches) {
+					matches.should.equal(path.resolve('readdir-nested/src/package/Class.js'));
+					done();
+				});
+			});
+			it('should allow for early termination when using a matcher function', function (done) {
+				hunt(path.resolve('readdir-nested/src/package'), function (resource, next) {
+					next(~resource.indexOf('.js'), false);
+				}, null, function (err, matches) {
+					matches.should.have.length(2);
+					done();
+				});
+			});
+		});
+
+		describe('sync', function () {
+			it('should return all files matched with a matcher function', function () {
+				var matches = hunt.sync(path.resolve('readdir-nested/src/package'), function (resource) {
+					return ~resource.indexOf('ClassCamelCase.js');
+				});
+				matches.should.have.length(1);
+			});
+			it('should return all files matched with a matcher glob string', function () {
+				var matches = hunt.sync(path.resolve('readdir-nested/src/package'), 'Class*.js');
+				matches.should.have.length(2);
+			});
+			it('should return the first file matched when options.stopOnFirst is true', function () {
+				var matches = hunt.sync(path.resolve('readdir-nested/src/package'), 'Class*.js', { stopOnFirst: true });
+				matches.should.equal(path.resolve('readdir-nested/src/package/Class.js'));
 			});
 		});
 	});

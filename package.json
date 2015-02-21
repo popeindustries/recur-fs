@@ -1,26 +1,36 @@
 {
-	"name": "recur-fs",
-	"description": "A collection of recursive filesystem utilities.",
-	"version": "1.0.1",
-	"author": "popeindustries <alex@pope-industries.com>",
-	"keywords": ["fs"],
-	"dependencies": {
-		"rimraf": "2.2.8",
-		"mkdirp": "0.5.0"
-	},
-	"devDependencies": {
-		"should": "*",
-		"mocha": "*"
-	},
-	"main": "index.js",
-	"scripts": {
-		"test": "mocha --reporter spec --require should -t 40000"
-	},
-	"engines": {
-		"node": ">=0.8.0"
-	},
-	"repository": "git://github.com/popeindustries/recur-fs.git",
+  "name": "recur-fs",
+  "description": "A collection of recursive filesystem utilities.",
+  "version": "2.0.0-beta",
+  "author": "popeindustries <alex@pope-industries.com>",
+  "keywords": [
+    "fs",
+    "recursive",
+    "readdir",
+    "cp",
+    "mv",
+    "mkdir",
+    "rm",
+    "walk"
+  ],
+  "dependencies": {
+    "minimatch": "2.0.1",
+    "mkdirp": "0.5.0",
+    "rimraf": "2.2.8"
+  },
+  "devDependencies": {
+    "should": "*",
+    "mocha": "*"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter spec --require should -t 40000"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "repository": "git://github.com/popeindustries/recur-fs.git",
   "readmeFilename": "README.md",
-	"readme": "[![Build Status](https://travis-ci.org/popeindustries/recur-fs.png)](https://travis-ci.org/popeindustries/recur-fs)\n\nA collection of recursive filesystem utilities.\n\n## Installation\n\n```bash\nnpm install recur-fs\n```\n\n## Usage\n```javascript\nvar fs = require('recur-fs');\n\nfs.indir('/some/directory', '/some/directory/file.js');\n// Gather all files ending in '.js'\nfs.readdir('/some/directory', /\\.js$/, null, function(err, files, directories) {\n  // Do something with 'files'\n});\n// Gather all files not ending in '.css'\nfs.readdir('/some/directory', null, /\\.css$/, function(err, files, directories) {\n  // Do something with 'files'\n});\n// Make a directory and any missing parents (mkdir -p)\nfs.mkdir('/some/directory', function(err) {\n  // Do something\n});\n// Move a file to a new destination, calling mkdir if necessary\nfs.mv('/some/file', '/some/destination', function(err, newfilepath) {\n  // Do something with 'newfilepath'\n});\n// Copy a file to a new location (cp -r)\nfs.cp('/some/file', '/some/destination', function(err, newfilepath) {\n  // Do something with 'newfilepath'\n});\n// Copy the contents of a directory to a new location\n// (note trailing slash)\nfs.cp('/some/directory/contents/', '/some/destination', function(err, newdestination) {\n  // Do something with 'newdestination'\n});\n// Delete a directory and all subdirectories (rm -rF)\nfs.rm('/some/directory/and/children', function(err) {\n  // Do something when complete\n});\n\n```\n",
+  "readme": "[![Build Status](https://travis-ci.org/popeindustries/recur-fs.png)](https://travis-ci.org/popeindustries/recur-fs)\n\nA collection of recursive filesystem utilities.\n\n## Installation\n\n```bash\nnpm install recur-fs\n```\n\n## Usage\n```javascript\nvar fs = require('recur-fs');\n\nfs.indir('/some/directory', '/some/directory/file.js');\n// Gather all files ending in '.js'\nfs.readdir('/some/directory', /\\.js$/, null, function(err, files, directories) {\n  // Do something with 'files'\n});\n// Gather all files not ending in '.css'\nfs.readdir('/some/directory', null, /\\.css$/, function(err, files, directories) {\n  // Do something with 'files'\n});\n// Make a directory and any missing parents (mkdir -p)\nfs.mkdir('/some/directory', function(err) {\n  // Do something\n});\n// Move a file to a new destination, calling mkdir if necessary\nfs.mv('/some/file', '/some/destination', function(err, newfilepath) {\n  // Do something with 'newfilepath'\n});\n// Copy a file to a new location (cp -r)\nfs.cp('/some/file', '/some/destination', function(err, newfilepath) {\n  // Do something with 'newfilepath'\n});\n// Copy the contents of a directory to a new location\n// (note trailing slash)\nfs.cp('/some/directory/contents/', '/some/destination', function(err, newdestination) {\n  // Do something with 'newdestination'\n});\n// Delete a directory and all subdirectories (rm -rF)\nfs.rm('/some/directory/and/children', function(err) {\n  // Do something when complete\n});\n\n```\n",
   "license": "MIT"
 }
