@@ -451,7 +451,7 @@ describe('recur-fs', function () {
 				hunt(path.resolve('readdir-nested/src/package'), function (resource, next) {
 					next(~resource.indexOf('.js'), false);
 				}, null, function (err, matches) {
-					matches.should.have.length(2);
+					matches.should.have.length(1);
 					done();
 				});
 			});
