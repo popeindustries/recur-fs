@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/popeindustries/recur-fs.png)](https://travis-ci.org/popeindustries/recur-fs)
+[![NPM Version](https://img.shields.io/npm/v/recur-fs.svg?style=flat)](https://npmjs.org/package/recur-fs)
+[![Build Status](https://img.shields.io/travis/popeindustries/recur-fs.svg?style=flat)](https://travis-ci.org/popeindustries/recur-fs)
 
 A collection of recursive filesystem utilities.
 
