@@ -403,19 +403,19 @@ describe('recur-fs', function () {
 			it('should return all files matched with a matcher function', function (done) {
 				hunt(path.resolve('readdir-nested/src/package'), function (resource, stat, next) {
 					next(~resource.indexOf('ClassCamelCase.js'));
-				}, null, function (err, matches) {
+				}, false, function (err, matches) {
 					matches.should.have.length(1);
 					done();
 				});
 			});
 			it('should return all files matched with a matcher glob string', function (done) {
-				hunt(path.resolve('readdir-nested/src/package'), 'Class*.js', null, function (err, matches) {
+				hunt(path.resolve('readdir-nested/src/package'), 'Class*.js', false, function (err, matches) {
 					matches.should.have.length(2);
 					done();
 				});
 			});
 			it('should return the first file matched when options.stopOnFirst is true', function (done) {
-				hunt(path.resolve('readdir-nested/src/package'), 'Class*.js', { stopOnFirst: true }, function (err, matches) {
+				hunt(path.resolve('readdir-nested/src/package'), 'Class*.js', true, function (err, matches) {
 					matches.should.equal(path.resolve('readdir-nested/src/package/Class.js'));
 					done();
 				});
@@ -423,7 +423,7 @@ describe('recur-fs', function () {
 			it('should allow for early termination when using a matcher function', function (done) {
 				hunt(path.resolve('readdir-nested/src/package'), function (resource, stat, next) {
 					next(~resource.indexOf('.js'), true);
-				}, null, function (err, matches) {
+				}, false, function (err, matches) {
 					matches.should.have.length(1);
 					done();
 				});
