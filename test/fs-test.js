@@ -31,78 +31,51 @@ describe('recur-fs', function () {
 	describe('readdir', function () {
 		describe('async', function () {
 			it('should read the contents of a flat directory', function (done) {
-				readdir(path.resolve('readdir-simple'), null, null, function (err, files, directories) {
-					files.should.have.length(4);
-					directories.should.have.length(1);
+				readdir(path.resolve('readdir-simple'), function (err, resources) {
+					(resources.length >= 4).should.be.true;
 					done();
 				});
 			});
 			it('should read the contents of a nested directory', function (done) {
-				readdir(path.resolve('readdir-nested'), null, null, function (err, files, directories) {
+				readdir(path.resolve('readdir-nested'), function (err, resources) {
+					(resources.length >= 6).should.be.true;
+					done();
+				});
+			});
+			it('should call a passed visitor function for each resource', function (done) {
+				var files = [];
+				readdir(path.resolve('readdir-simple'), function (resource, stat, next) {
+					if (stat.isFile()) files.push(resource);
+					next();
+				}, function (err, resources) {
 					files.should.have.length(4);
-					directories.should.have.length(3);
 					done();
 				});
 			});
-			it('should ignore files when an ignore pattern is passed', function (done) {
-				readdir(path.resolve('readdir-simple'), null, /^Class/, function (err, files, directories) {
-					files.should.have.length(2);
-					directories.should.have.length(1);
-					done();
-				});
-			});
-			it('should include files when an include pattern is passed', function (done) {
-				readdir(path.resolve('readdir-simple'), /^Class/, null, function (err, files, directories) {
-					files.should.have.length(2);
-					directories.should.have.length(1);
-					done();
-				});
-			});
-			it('should skip empty nested directories', function (done) {
-				readdir(path.resolve('readdir-empty'), null, null, function (err, files, directories) {
-					files.should.have.length(1);
-					directories.should.have.length(2);
-					done();
-				});
-			});
-			it('should automatically ignore hidden files', function (done) {
-				readdir(path.resolve('readdir-empty/empty'), null, null, function (err, files, directories) {
-					files.should.have.length(0);
-					directories.should.have.length(1);
+			it('should skip resources if a passed visitor function returns "true"', function (done) {
+				readdir(path.resolve('readdir-simple'), function (resource, stat, next) {
+					next(true);
+				}, function (err, resources) {
+					resources.should.have.length(0);
 					done();
 				});
 			});
 		});
 		describe('sync', function () {
 			it('should read the contents of a flat directory', function () {
-				var fd = readdir.sync(path.resolve('readdir-simple'));
-				fd.files.should.have.length(4);
-				fd.directories.should.have.length(1);
+				var resources = readdir.sync(path.resolve('readdir-simple'));
+				(resources.length >= 4).should.be.true;
 			});
 			it('should read the contents of a nested directory', function () {
-				var fd = readdir.sync(path.resolve('readdir-nested'));
-				fd.files.should.have.length(4);
-				fd.directories.should.have.length(3);
+				var resources = readdir.sync(path.resolve('readdir-nested'));
+				(resources.length >= 6).should.be.true;
 			});
-			it('should ignore files when an ignore pattern is passed', function () {
-				var fd = readdir.sync(path.resolve('readdir-simple'), null, /^Class/);
-				fd.files.should.have.length(2);
-				fd.directories.should.have.length(1);
-			});
-			it('should include files when an include pattern is passed', function () {
-				var fd = readdir.sync(path.resolve('readdir-simple'), /^Class/);
-				fd.files.should.have.length(2);
-				fd.directories.should.have.length(1);
-			});
-			it('should skip empty nested directories', function () {
-				var fd = readdir.sync(path.resolve('readdir-empty'));
-				fd.files.should.have.length(1);
-				fd.directories.should.have.length(2);
-			});
-			it('should automatically ignore hidden files', function () {
-				var fd = readdir.sync(path.resolve('readdir-empty/empty'));
-				fd.files.should.have.length(0);
-				fd.directories.should.have.length(1);
+			it('should call a passed visitor function for each resource', function () {
+				var files = [];
+				readdir.sync(path.resolve('readdir-simple'), function (resource, stat) {
+					if (stat.isFile()) files.push(resource);
+				});
+				files.should.have.length(4);
 			});
 		});
 	});
@@ -394,9 +367,9 @@ describe('recur-fs', function () {
 		describe('async', function () {
 			it('should visit all resources of a directory and it\'s parents', function (done) {
 				var visits = 0;
-				walk(path.resolve('readdir-nested/src/package'), function (resource, next) {
+				walk(path.resolve('readdir-nested/src/package'), function (resource, stat, next) {
 					if (~resource.indexOf('.js')) visits++;
-					next(path.basename(path.dirname(resource)) != 'fixtures');
+					next(path.basename(path.dirname(resource)) == 'fixtures');
 				}, function (err) {
 					visits.should.equal(4);
 					done();
@@ -404,9 +377,9 @@ describe('recur-fs', function () {
 			});
 			it('should allow for early termination', function (done) {
 				var visits = 0;
-				walk('readdir-nested/src/package', function (resource, next) {
+				walk('readdir-nested/src/package', function (resource, stat, next) {
 					if (~resource.indexOf('.js')) visits++;
-					next(false);
+					next(true);
 				}, function (err) {
 					visits.should.equal(1);
 					done();
@@ -417,7 +390,7 @@ describe('recur-fs', function () {
 		describe('sync', function () {
 			it('should visit all resources of a directory and it\'s parents', function () {
 				var visits = 0;
-				walk.sync(path.resolve('readdir-nested/src/package'), function (resource) {
+				walk.sync(path.resolve('readdir-nested/src/package'), function (resource, stat) {
 					if (resource.indexOf(process.cwd()) == 0 && ~resource.indexOf('.js')) visits++;
 				});
 				visits.should.equal(4);
@@ -428,7 +401,7 @@ describe('recur-fs', function () {
 	describe('hunt', function () {
 		describe('async', function () {
 			it('should return all files matched with a matcher function', function (done) {
-				hunt(path.resolve('readdir-nested/src/package'), function (resource, next) {
+				hunt(path.resolve('readdir-nested/src/package'), function (resource, stat, next) {
 					next(~resource.indexOf('ClassCamelCase.js'));
 				}, null, function (err, matches) {
 					matches.should.have.length(1);
@@ -448,8 +421,8 @@ describe('recur-fs', function () {
 				});
 			});
 			it('should allow for early termination when using a matcher function', function (done) {
-				hunt(path.resolve('readdir-nested/src/package'), function (resource, next) {
-					next(~resource.indexOf('.js'), false);
+				hunt(path.resolve('readdir-nested/src/package'), function (resource, stat, next) {
+					next(~resource.indexOf('.js'), true);
 				}, null, function (err, matches) {
 					matches.should.have.length(1);
 					done();
@@ -459,7 +432,7 @@ describe('recur-fs', function () {
 
 		describe('sync', function () {
 			it('should return all files matched with a matcher function', function () {
-				var matches = hunt.sync(path.resolve('readdir-nested/src/package'), function (resource) {
+				var matches = hunt.sync(path.resolve('readdir-nested/src/package'), function (resource, stat) {
 					return ~resource.indexOf('ClassCamelCase.js');
 				});
 				matches.should.have.length(1);
