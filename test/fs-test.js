@@ -77,6 +77,14 @@ describe('recur-fs', function () {
 				});
 				files.should.have.length(4);
 			});
+			it('should skip resources if a passed visitor function returns "true"', function () {
+				readdir(path.resolve('readdir-simple'), function (resource, stat, next) {
+					return true;
+				}, function (err, resources) {
+					resources.should.have.length(0);
+					done();
+				});
+			});
 		});
 	});
 
