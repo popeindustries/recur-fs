@@ -8,7 +8,7 @@
     "recursive",
     "readdir",
     "cp",
-    "cp-r"
+    "cp-r",
     "mv",
     "mkdir",
     "mkdir-p",
