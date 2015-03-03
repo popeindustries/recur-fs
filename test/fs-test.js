@@ -68,6 +68,9 @@ describe('recur-fs', function () {
 			});
 		});
 		describe('sync', function () {
+			it('should return an empty array for a nonexistant directory', function () {
+				var resources = readdir.sync('foo');
+			});
 			it('should read the contents of a flat directory', function () {
 				var resources = readdir.sync(path.resolve('readdir-simple'));
 				(resources.length >= 4).should.be.true;
