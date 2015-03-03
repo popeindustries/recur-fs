@@ -30,6 +30,12 @@ describe('recur-fs', function () {
 
 	describe('readdir', function () {
 		describe('async', function () {
+			it('should return an empty array for a nonexistant directory', function (done) {
+				readdir('foo', function (err, resources) {
+					resources.should.have.length(0);
+					done()
+				});
+			});
 			it('should read the contents of a flat directory', function (done) {
 				readdir(path.resolve('readdir-simple'), function (err, resources) {
 					(resources.length >= 4).should.be.true;
