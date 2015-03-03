@@ -52,9 +52,9 @@ describe('recur-fs', function () {
 					done();
 				});
 			});
-			it('should skip resources if a passed visitor function returns "true"', function (done) {
+			it('should skip resources if a passed visitor function returns "false"', function (done) {
 				readdir(path.resolve('readdir-simple'), function (resource, stat, next) {
-					next(true);
+					next(false);
 				}, function (err, resources) {
 					resources.should.have.length(0);
 					done();
@@ -77,13 +77,11 @@ describe('recur-fs', function () {
 				});
 				files.should.have.length(4);
 			});
-			it('should skip resources if a passed visitor function returns "true"', function () {
-				readdir(path.resolve('readdir-simple'), function (resource, stat, next) {
-					return true;
-				}, function (err, resources) {
-					resources.should.have.length(0);
-					done();
+			it('should skip resources if a passed visitor function returns "false"', function () {
+				var resources = readdir.sync(path.resolve('readdir-simple'), function (resource, stat) {
+					return false;
 				});
+				resources.should.have.length(0);
 			});
 		});
 	});

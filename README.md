@@ -21,7 +21,7 @@ fs.readdir('/some/directory', function(err, resources) {
 
 ## API
 
-**readdir(directory, visitor(_resource, stat, next_), fn(_err, resources_))** Recursively read contents of `directory`, returning all resources. `visitor` is an optional function called on each resource. Calling `next(true)` from `visitor` will exclude resource from the collection.
+**readdir(directory, visitor(_resource, stat, next_), fn(_err, resources_))** Recursively read contents of `directory`, returning all resources. `visitor` is an optional function called on each resource. Calling `next(false)` from `visitor` will exclude resource from the collection.
 
 ```js
 fs.readdir('/some/directory', function (err, resources) {
@@ -29,21 +29,21 @@ fs.readdir('/some/directory', function (err, resources) {
 });
 
 fs.readdir('/some/other/directory', function (resource, stat, next) {
-  // Return 'true' to skip adding to 'resources'
-  next(stat.isDirectory());
+  // Return 'false' to skip adding to 'resources'
+  next(stat.isFile());
 }, function(err, resources) {
   // Do something with 'resources'
 });
 ```
 
-**readdir.sync(directory, visitor(_resource, stat_))** Synchronously, recursively read contents of `directory`, returning all resources. `visitor` is an optional function called on each resource. Returning `true` from `visitor` will exclude resource from the collection.
+**readdir.sync(directory, visitor(_resource, stat_))** Synchronously, recursively read contents of `directory`, returning all resources. `visitor` is an optional function called on each resource. Returning `false` from `visitor` will exclude resource from the collection.
 
 ```js
 var resources = fs.readdir.sync('/some/directory');
 
 var files = fs.readdir.sync('/some/other/directory', function (resource, stat) {
-  // Return 'true' to skip adding to 'resources'
-  return stat.isDirectory();
+  // Return 'false' to skip adding to 'resources'
+  return stat.isFile();
 });
 ```
 
