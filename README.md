@@ -91,7 +91,7 @@ fs.hunt('/some/other/directory', function (resource, stat, next) {
 });
 ```
 
-**hunt.sync(directory, matcher(_resource, stat, next_), stopOnFirstMatch)** Synchronously walk up filesystem tree from `directory`, returning all resources matched with `matcher`, and stopping when root directory is reached, or after first match if `stopOnFirstMatch=true`.
+**hunt.sync(directory, matcher(_resource, stat_), stopOnFirstMatch)** Synchronously walk up filesystem tree from `directory`, returning all resources matched with `matcher`, and stopping when root directory is reached, or after first match if `stopOnFirstMatch=true`.
 
 `matcher` can be a glob-type string (see [minimatch](https://github.com/isaacs/minimatch)), or function returning `true` to signal a match.
 
