@@ -410,6 +410,14 @@ describe('recur-fs', function () {
 				});
 				visits.should.equal(4);
 			});
+			it('should allow for early termination', function () {
+				var visits = 0;
+				walk.sync(path.resolve('readdir-nested/src/package'), function (resource, stat) {
+					if (~resource.indexOf('.js')) visits++;
+					return true;
+				});
+				visits.should.equal(1);
+			});
 		});
 	});
 
