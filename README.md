@@ -58,7 +58,7 @@ fs.walk('/some/directory', function (resource, stat, next) {
 });
 ```
 
-**walk.sync(directory, visitor(_resource, stat, next_))** Synchronously walk up filesystem tree from `directory`, passing all resources to `visitor`, and stopping when root directory is reached.
+**walk.sync(directory, visitor(_resource, stat_))** Synchronously walk up filesystem tree from `directory`, passing all resources to `visitor`, and stopping when root directory is reached, or visitor returns `true`.
 
 ```js
 fs.walk.sync('/some/directory', function (resource, stat) {
