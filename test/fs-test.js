@@ -26,6 +26,9 @@ describe('recur-fs', function () {
 			indir('/some/directory', '/another/directory/file.js').should.be.false;
 			indir('/some/directory', '/some/other/directory/file.js').should.be.false;
 		});
+		it('should return false when passed a directory of "null"', function () {
+			indir(null, '/another/directory/file.js').should.be.false;
+		});
 	});
 
 	describe('readdir', function () {
